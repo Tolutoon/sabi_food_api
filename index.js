@@ -24,6 +24,15 @@ app.post('/api/restaurants', async (req, res) => {
     } catch (error) {
         res.status(500).json({message: error.message})
     }
+});
+
+app.get('/api/restaurants', async (req, res) => {
+    try {
+        const restaurant = await Restaurant.find({});
+        res.status(200).json(restaurant);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
 })
 
 

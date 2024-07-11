@@ -16,7 +16,7 @@ const RestaurantSchema = mongoose.Schema(
         },
     },
     {
-        timeStamps: true
+        timestamps: true,
     }
 )
 
