@@ -1,9 +1,7 @@
-// index.js
-
 import express from 'express';
 import mongoose from 'mongoose';
 import Restaurant from './models/restaurant_model.js';
-import Recipe from './models/recipie_model.js';
+import Recipe from './models/recipie_model.js'
 
 const app = express();
 const PORT = 4008;
