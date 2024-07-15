@@ -14,6 +14,10 @@ const RestaurantSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        recipes: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Recipe"
+        }]
     },
     {
         timestamps: true,
