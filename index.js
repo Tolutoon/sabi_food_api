@@ -71,6 +71,53 @@ app.get('/api/restaurants/:id', async (req, res) => {
     }
 });
 
+// PUT endpoint to update a restaurant with recipes
+app.put('/api/restaurants/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, address, imgUrl, recipes } = req.body;
+
+        // Update the restaurant details
+        const restaurant = await Restaurant.findByIdAndUpdate(
+            id,
+            { name, address, imgUrl },
+            { new: true }
+        );
+
+        if (!restaurant) {
+            return res.status(404).json({ message: 'Restaurant not found' });
+        }
+
+        // Update recipes associated with the restaurant
+        if (recipes && recipes.length > 0) {
+            const recipeIds = await Promise.all(recipes.map(async (recipeData) => {
+                if (recipeData._id) {
+                    // Update existing recipe
+                    await Recipe.findByIdAndUpdate(recipeData._id, recipeData);
+                    return recipeData._id;
+                } else {
+                    // Create new recipe
+                    const newRecipe = new Recipe(recipeData);
+                    await newRecipe.save();
+                    return newRecipe._id;
+                }
+            }));
+            restaurant.recipes = recipeIds;
+        } else {
+            restaurant.recipes = [];
+        }
+
+        await restaurant.save();
+
+        const updatedRestaurant = await Restaurant.findById(id).populate('recipes');
+        res.status(200).json(updatedRestaurant);
+
+    } catch (error) {
+        console.error('Error updating restaurant:', error);
+        res.status(500).json({ message: 'Failed to update restaurant' });
+    }
+});
+
 app.get('/', (req, res) => {
     res.send('Hi, Welcome to Sabi Food API DOC');
 });
