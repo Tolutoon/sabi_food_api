@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import Restaurant from './models/restaurant_model.js';
 import Recipe from './models/recipie_model.js'
+import Pharmacy from './models/pharmacy_model.js';
 
 const app = express();
 const PORT = 4008;
@@ -44,6 +45,28 @@ app.post('/api/restaurants', async (req, res) => {
         res.status(500).json({ error: 'Failed to create restaurant' });
     }
 });
+
+// POST endpoint to create a new pharmacy
+app.post('/api/pharmacy', async (req, res)=> {
+    try {
+        const pharmacy = await Pharmacy.create(req.body);
+        res.status(200).json(pharmacy);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+        
+    }
+});
+
+//Get endpoint to fetch the all pharmacies
+app.get('/api/pharmacy', async(req, res) => {
+    try {
+        const pharmacy = await await Pharmacy.find({});
+        res.status(203).json(pharmacy);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+})
+
 
 // GET endpoint to fetch all restaurants with populated recipes
 app.get('/api/restaurants', async (req, res) => {
