@@ -94,6 +94,24 @@ app.get('/api/restaurants/:id', async (req, res) => {
     }
 });
 
+//DELETE endpoint to remove a restaurantby ID
+app.delete('/api/restaurants/:id', async (req, res) => {
+    try {
+        const resId = req.params.id;
+
+        const deletedRes = await Restaurant.findByIdAndDelete(resId);
+
+        if (!deletedRes) {
+            return res.status(404).json({error: 'Retaurant not found'});
+        }
+        res.status(200).json({message: 'Restaurant deleted Successfully'})
+    } catch (error) {
+        console.error('Error deleting retaurants', error);
+        res.status(500).json({error: 'Failed to delete restaurant'})
+    }
+});
+
+
 // PUT endpoint to update a restaurant with recipes
 app.put('/api/restaurants/:id', async (req, res) => {
     try {
